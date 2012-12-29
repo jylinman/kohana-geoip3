@@ -9,6 +9,7 @@
 return array
 (
 	'dbfile' => MODPATH.'geoip3'.DIRECTORY_SEPARATOR.'database'.DIRECTORY_SEPARATOR.'GeoLiteCity.dat',
+	'timezonefile' => MODPATH.'geoip3'.DIRECTORY_SEPARATOR.'database'.DIRECTORY_SEPARATOR.'timezone.txt',
 	'useshm' => FALSE,
 	'internalcache' => TRUE
 

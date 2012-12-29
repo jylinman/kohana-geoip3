@@ -20,7 +20,7 @@ class Geoip3 {
 		if ( ! isset(Geoip3::$_instance))
 		{
 			// Load the configuration for this type
-			$config = Kohana::config('geoip3');
+			$config = Kohana::$config->load('geoip3');
 			
 			// Create a new session instance
 			Geoip3::$_instance = new Geoip3($config);
@@ -57,6 +57,28 @@ class Geoip3 {
 	public function city($ipaddress)
 	{
 		return $this->property('city', $ipaddress);
+	}
+
+	public function timezone($ipaddress)
+	{
+		$db_file = $this->_config->timezonefile;
+		$record = $this->record($ipaddress);
+
+		if (! is_file($db_file)) throw new Kohana_Exception('Cannot find timezone database file at :file', array(':file' => $db_file));
+
+		// Cannot interpret local ip address
+		if ($record === NULL) return NULL;
+
+		$rows = file($db_file);
+		foreach ($rows as $row)
+		{
+			list($country, $region, $zone) = explode("\t", $row);
+
+			if ($country == $record->country_code AND $region == $record->region)
+				return trim($zone);
+		}
+
+		return NULL;
 	}
 	
 	public function record($ipaddress)
